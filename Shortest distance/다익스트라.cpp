@@ -1,32 +1,27 @@
-# include <bist/stdc++.h>
-
+#include <stdio.h>
+#include<iostream>
+#include<vector>
+#include<queue>
 using namespace std;
 
+int main(){
+	vector<int> a;
+	a.push_back(1);
+		a.push_back(1);
 
-int n,m,start;
-vector< pair <int, int> > graph[10001];
+	a.push_back(1);
 
-int d[10001];
+	a.push_back(1);
 
-void dijkstra(int start){
-	priority_queue<pair<int, int> > pq;
+	a.push_back(1);
+
+	a.push_back(1);
+
+
 	
-	pq.push({0,start});
-	d[start]=0;
+
 	
-	while(!pq.empty()){
-		
-		int dist = -pq.top().first;
-		int now = pq.top().second;
-		pq.pop();
-		
-		if(d[now]<dist)continue;
-		
-		for(int i=0;i<graph[now].size();i++){
-			int cost = dist + graph[now][i]
-		}
-		
-		
-	}
+	cout<<a.size();
+	
 	
 }
