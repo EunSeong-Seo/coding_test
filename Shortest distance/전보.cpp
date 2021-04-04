@@ -27,7 +27,7 @@ void dijkstra(int start){
 			
 			if (cost < d[graph[now][i].first]){
 				d[graph[now][i].first] = cost;
-				pq.push(make_pair(-cost, graph[now][i].first));
+				pq.push({-cost, graph[now][i].first});
 			}
 		}
 		
