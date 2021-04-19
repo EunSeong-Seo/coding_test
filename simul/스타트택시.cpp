@@ -36,10 +36,6 @@ people::people() {
 	done = false;
 }
 
-bool cmp(people A, people B) {
-	if (A.done == true)return A.d > B.d;
-	return A.d > B.d;
-}
 
 
 vector<people> M(MAX);
@@ -82,77 +78,112 @@ void bfs(int t_x, int t_y) {
 
 			if (nx <= 0 || ny <= 0 || nx > n || ny > n)continue;
 			if (move_map[nx][ny] == WALL)continue;
+			if (nx == t_x && ny == t_y)continue;
 			if (move_map[nx][ny] == 0) {
 				move_map[nx][ny] = move_map[x][y] + 1;
 				q.push({ nx,ny });
 			}
 		}
 	}
-	cout << "bfs" << endl;
-	cout << fuel << endl;
 }
 
+
+
 int solve() {
-	bfs(taxy_x, taxy_y);
-	
-	vector <people> N;
-	int ack = 0;
+	while (true) {
+		bfs(taxy_x, taxy_y);
 
-	for (int i = 1; i <= n; i++) {
-		for (int j = 1; j <= n; j++) {
-			cout << move_map[i][j]<<" ";
+		/*for (int i = 1; i <= n; i++) {
+			for (int j = 1; j <= n; j++) {
+				cout << move_map[i][j] << " ";
+			}
+			cout << endl;
+		}*/
+
+		people N;	//°¡±î¿î ½Â°´
+
+		N.start_x = MAX;
+		N.start_y = MAX;
+		N.end_x = 0;
+		N.end_y = 0;
+		N.d = MAX;
+		int ack = 0;
+
+		for (int i = 0; i < m; i++) {
+			M[i].d = move_map[M[i].start_x][M[i].start_y];
+			if (M[i].start_x!=taxy_x&&M[i].start_y!=taxy_y&&M[i].d == 0)return -1;
 		}
-		cout << endl;
-	}
 
+		for (int i = 0; i < m; i++) {
+			if (M[i].done) {
+				ack++;
+				continue;
+				
+			}
+			if (M[i].d < N.d) {
+				N.start_x = M[i].start_x;
+				N.start_y = M[i].start_y;
+				N.end_x = M[i].end_x;
+				N.end_y = M[i].end_y;
+				N.d = M[i].d;
+			}
+			else if (M[i].d == N.d) {
+				if (M[i].start_x < N.start_x) {
+					N.start_x = M[i].start_x;
+					N.start_y = M[i].start_y;
+					N.end_x = M[i].end_x;
+					N.end_y = M[i].end_y;
+					N.d = M[i].d;
+				}
+				else if (M[i].start_x == N.start_x) {
+					if (M[i].start_y < N.start_y) {
+						N.start_x = M[i].start_x;
+						N.start_y = M[i].start_y;
+						N.end_x = M[i].end_x;
+						N.end_y = M[i].end_y;
+						N.d = M[i].d;
+					}
+				}
+			}
 
-	for (int i = 0; i < m; i++) {
-		if (M[i].done) {
-			continue;
-			ack++;
 		}
-		M[i].d = move_map[M[i].start_x][M[i].start_y];
-	}
 
+		for (int i = 0; i < m; i++) {
+			if (M[i].start_x == N.start_x && M[i].start_y == N.start_y) {
+				M[i].done = true;
+			}
+		}
 
-	sort(M.begin(), M.end(), cmp);
-	
-	int startx = M[m - 1].start_x;
-	int starty = M[m - 1].start_y;
-	int endx = M[m - 1].end_x;
-	int endy = M[M.size() - 1].end_y;
-	int dis = M[M.size() - 1].d;
-	
-	if (fuel < dis)return -1;
+		int startx = N.start_x;
+		int starty = N.start_y;
+		int endx = N.end_x;
+		int endy = N.end_y;
+		int dis = N.d;
 
+		if (fuel < dis)return -1;
 
-	//ÀÌµ¿
-	taxy_x = startx;
-	taxy_y = starty;
-	fuel -= dis;
-	bfs(taxy_x, taxy_y);
-	
-	int des = move_map[endx][endy];
+		//½Â°´ÇÑÅ× ÀÌµ¿
+		taxy_x = startx;
+		taxy_y = starty;
+		fuel -= dis;
+		bfs(taxy_x, taxy_y);
 
-	if (fuel < des)return -1;
-	
-	//ÀÌµ¿
-	taxy_x = startx;
-	taxy_y = starty;
-	fuel -= des;
-	M[M.size()-1].done = true;
-	ack++;
+		int des = move_map[endx][endy];
 
-	if (ack == m) return fuel;
-	else {
+		if (fuel < des)return -1;
+
+		//ÀÌµ¿
+		taxy_x = endx;
+		taxy_y = endy;
+		fuel -= des;
+		ack++;
 		fuel += des * 2;
+		
+		if (ack == m) return fuel;
 	}
-
 }
 
 int main() {
 	input();
-	cout << "solve : "<<solve() << endl;
-
-
+	cout <<solve() << endl;
 }
