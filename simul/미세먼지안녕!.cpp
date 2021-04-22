@@ -44,26 +44,43 @@ void input() {
 
 void mise_move() {	
 	while (T) {
-		for (int i = 0; i < R; i++) {
-			for (int j = 0; j < C; j++) {
-				if (map[i][j] == -1)continue;
-				int x = i;
-				int y = j;
-				int dc = 0;
-				for (int k = 0; k < 4; k++) {
-					int nx = x + dx[k];
-					int ny = y + dy[k];
-					if (nx < 0 || ny < 0 || nx >= R || ny >= C)continue;
-					if (nx == g1_x && ny == g1_y)continue;
-					if (nx == g2_x && ny == g2_y)continue;
+		
+		queue<pair<int,int>>q;
+		
+		for (int i = 0; i < R; i++) 
+			for (int j = 0; j < C; j++) 
+				if (map[i][j] >= 1) 
+					q.push({ i, j });
+					
+		int copyArr[60][60];
+		for (int i = 0; i < R; i++) 
+			for (int j = 0; j < C; j++) 
+				copyArr[i][j] = map[i][j];
 
-					map[nx][ny] += map[x][y] / 5;
-					dc++;
+
+		while(!q.empty()){
+		
+			int x = q.front().first;
+			int y = q.front().second;
+			
+			int temp = copyArr[x][y]/5;
+			
+			for (int k = 0; k < 4; k++) {
+				int nx = x + dx[k];
+				int ny = y + dy[k];
+				if (0 <= nx && nx < R && 0 <= ny && ny < C) 
+					if(copyArr[nx][ny] >= 0) 
+					{
+					 map[nx][ny] += temp; 
+					 map[x][y] -= temp; 
+					}
 				}
-
-				map[x][y] = map[x][y] - map[x][y] * dc / 5;
-			}
+				
+			for (int i = 0; i < R; i++) 
+				for (int j = 0; j < C; j++) 
+					copyArr[i][j] = map[i][j];
 		}
+		
 		T--;
 	}
 
