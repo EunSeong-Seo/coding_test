@@ -1,26 +1,25 @@
-#include <iostream>
+#include<iostream>
 #include <algorithm>
-#include <string>
 
 using namespace std;
 
-string s,t;
-bool possible;
+int n,m;
 
-int main(){
-	cin>>s>>t;
+int main(void){
 	
-	while(1){
-		
-		if(s.length()==t.length()){
-			if(s==t) possible = true;
-			break;
-		}
-		
-		char c= t[t.length()-1];
-		t.pop_back();
-		if(c=='B') reverse(t.begin(),t.end());
+	cin>>n>>m;
+	
+	if(n==1) cout<<1<<'\n';
+	else if(n==2){
+		cout<<min(4,(m+1)/2)<<'\n';
 	}
 	
-	cout<<possible<<endl;
+	else if(n>=3){
+		if(m<=6) cout<<min(4,m)<<'\n';
+		else cout<<m-2<<'\n';
+	}
+	
+	return 0;
+	
+	
 }
