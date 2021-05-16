@@ -1,56 +1,70 @@
-//틀린코드
 #include <iostream>
 #include <queue>
-using namespace std;
-#define X first
-#define Y second
-int board[1002][1002];
-int dist[1002][1002];
-int n,m;
-int dx[4] = {1,0,-1,0};
-int dy[4] = {0,1,0,-1};
+#include <algorithm>
 
-int main(void) {
+using namespace std;
+
+
+int n,m;
+int map[1004][1004];
+int dist[1004][1004];
+
+int dx[4]={-1,0,1,0};
+int dy[4]={0,1,0,-1};
+
+int mx=0;
+
+int main(){
 	ios::sync_with_stdio(0);
 	cin.tie(0);
-	cin >> m >> n;
-	queue<pair<int, int> > q;
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < m; j++) {
-			cin >> board[i][j];
-			if (board[i][j] == 1)
-				q.push({ i,j });
-			if (board[i][j] == 0)
-				dist[i][j] = -1;
-		}
+	
+	queue<pair<int,int> >q;
+	
+	for(int i=0;i<n;i++){
+		fill(dist[n],dist[n]+m,0);
 	}
 
-	while (!q.empty()) {
-		auto cur = q.front(); q.pop();
-
-		for (int dir = 0; dir < 4; dir++) {
-			int nx = cur.X + dx[dir];
-			int ny = cur.Y + dy[dir];
-
-			if (nx < 0 || ny < 0 || nx >= n || ny >= m) continue;
-
-			if (dist[nx][ny] >= 0) continue;
-
-			dist[nx][ny] = dist[cur.X][cur.Y] + 1;
-			q.push({ nx,ny });
+	cin>>m>>n;
+	for(int i=0;i<n;i++){
+		for(int j=0;j<m;j++){
+			cin>>map[i][j];
+			if(map[i][j]==1){
+				dist[i][j]=1;
+				q.push({i,j});
+			}
 		}
 	}
+	
 
-	int ans = 0;
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < m; j++) {
-			if (dist[i][j] == -1) {
-				cout << -1;
+	
+	
+	while(!q.empty()){
+		int x = q.front().first;
+		int y = q.front().second;
+		q.pop();
+		
+		for(int dir =0; dir<4;dir++){
+			int nx = x + dx[dir];
+			int ny = y +dy[dir];
+			
+			if(nx<0||ny<0||nx>=n||ny>=m) continue;
+			if(dist[nx][ny]>=1)continue;
+			if(map[nx][ny]==-1)continue;
+			
+			dist[nx][ny]= dist[x][y]+1;
+			q.push({nx,ny});
+		}
+	}
+	
+	for(int i=0;i<n;i++){
+		for(int j=0;j<m;j++){
+			if(dist[i][j]==0&&map[i][j]!=-1){
+				cout<<-1<<'\n';
 				return 0;
 			}
-			ans = max(ans, dist[i][j]);
+			mx = max(mx,dist[i][j]);
 		}
 	}
-	cout << ans << '\n';
-}
-
+	
+	cout<<mx-1;
+} 
